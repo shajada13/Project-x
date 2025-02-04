@@ -2,7 +2,7 @@
 
 int i;
 void moveXY(int x, int y);
-void textColor(int code);
+void textColor(int code);git 
 void resetTextColor();
 void box1();
 void mainBox();
