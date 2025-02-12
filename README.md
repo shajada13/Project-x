@@ -71,10 +71,11 @@ This project is **open-source** under the **MIT License**.
 ## Authors
 Developed by **Arafat and Team**.
 
----
+----
 ### Note:
 - Make sure data files exist before running the program.
 - Future improvements can include **GUI integration, database storage, and multi-user access**.
 
 Feel free to contribute and improve the system! 🚀
+
 
