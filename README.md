@@ -1,7 +1,7 @@
-# Shared Accommodation Management System
+# STUDENT DORM ADMINISTRATION SYSTEM
 
 ## Overview
-This project is a **Shared Accommodation Management System**, developed using the **C programming language**. It helps manage different aspects of shared living, including **student information, room allocations, payments, and maintenance records**.
+This project is a **STUDENT DORM ADMINISTRATION SYSTEM**, developed using the **C programming language**. It helps manage different aspects of shared living, including **student information, room allocations, payments, and maintenance records**.
 
 ## Features
 - **Student Management**: Add, update, delete, and view student details.
