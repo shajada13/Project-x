@@ -76,5 +76,4 @@ Developed by **Arafat and Team**.
 - Make sure data files exist before running the program.
 - Future improvements can include **GUI integration, database storage, and multi-user access**.
 
-Feel free to contribute and improve the system! 🚀
-
+Feel free to contribute and improve the system! 
