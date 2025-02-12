@@ -1,7 +1,15 @@
 #include "../include/library.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <windows.h>
 int i;
+
+char getch_echo()
+{
+    char c = getchar();
+    putchar(c);  // Echo the character
+    return c;
+}
 
 // ========== Cursor Moving Function ==========
 
@@ -22,6 +30,23 @@ void resetTextColor()
     printf("\033[0m");
 }
 
+// ========== For blinking First Letter ==========
+
+// void blink_letter(char word[], int times, int delay)
+// {
+//     for (i = 0; i < times; i++)
+//     {
+//         if (i % 2 == 0)
+//             printf("_%s\r", word + 1);
+//         else   
+//             printf("%s\r", word);
+        
+//         fflush(stdout);
+//         Sleep(delay);
+//     }
+//     printf("\n");
+// }
+
 void box1()
 {
     moveXY(1, 3);
@@ -29,7 +54,7 @@ void box1()
     for(i = 1; i < 89; i++)
     {
         moveXY(i + 1, 3);
-        printf("%c", 205); // Upper Horizontal Line
+        printf("="); // Upper Horizontal Line
     }
     moveXY(90, 3);
     printf("%c", 187); // Top Right Corner

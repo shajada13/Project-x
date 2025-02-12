@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 #include "../include/library.h"
 #include "../include/main_menu.h"
 
@@ -54,6 +56,19 @@ void main_menu()
     printf("ettings");
 
     textColor(30);
+    moveXY(40, 16);
+    printf("Welcome to...");
+    // textColor(36);
+    moveXY(30, 17);
+    printf("STUDENT DORM ADMINISTRATION SYSTEM");
+
+    textColor(34);
+    moveXY(3, 28);
+    printf("Press First Charecter for further Menu... ");
+
+    textColor(30);
     box1();
     mainBox();
+
+    char ch = toupper(getch_echo());
 }
