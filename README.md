@@ -52,7 +52,7 @@ project/
 1. Open a terminal in the project root directory.
 2. Compile the source code using the following command:
    ```sh
-   gcc src/*.c -o main.exe
+   gcc main.c library.c main_menu.c -o main.exe -I../include
    ```
 3. Run the executable:
    ```sh
