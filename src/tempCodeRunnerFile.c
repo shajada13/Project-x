@@ -1,1 +1,1 @@
-moveXY(1, 9);
+system("color F0")
