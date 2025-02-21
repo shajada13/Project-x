@@ -5,6 +5,14 @@
 
 int i;
 
+void moveXY(int x, int y);
+void textColor(int code);git 
+void resetTextColor();
+void box1();
+void mainBox();
+void main_menu();
+
+
 // ========== Main Function ==========
 
 int main()
