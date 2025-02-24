@@ -69,7 +69,7 @@ project/
 This project is **open-source** under the **MIT License**.
 
 ## Authors
-Developed by **Arafat and Team**.
+Developed by **Arafat, Nisat, Naim, Masum & Alfi**.
 
 ---
 ### Note:
@@ -77,4 +77,7 @@ Developed by **Arafat and Team**.
 - Future improvements can include **GUI integration, database storage, and multi-user access**.
 
 Feel free to contribute and improve the system! 
+<<<<<<< HEAD
 
+=======
+>>>>>>> main
