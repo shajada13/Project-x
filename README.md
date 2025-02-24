@@ -69,7 +69,7 @@ project/
 This project is **open-source** under the **MIT License**.
 
 ## Authors
-Developed by **Arafat and Team**.
+Developed by **Arafat, Nisat, Naim, Masum & Alfi**.
 
 ---
 ### Note:
