@@ -1,8 +1,9 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 int i;
 void moveXY(int x, int y);
-void textColor(int code);git 
+void textColor(int code);
 void resetTextColor();
 void box1();
 void mainBox();
