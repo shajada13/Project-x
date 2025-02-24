@@ -77,7 +77,3 @@ Developed by **Arafat, Nisat, Naim, Masum & Alfi**.
 - Future improvements can include **GUI integration, database storage, and multi-user access**.
 
 Feel free to contribute and improve the system! 
-<<<<<<< HEAD
-
-=======
->>>>>>> main
