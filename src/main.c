@@ -4,7 +4,7 @@
 #include "../include/main_menu.h"
 #include "../include/student.h"
 
-int i;
+
 
 void moveXY(int x, int y);
 void textColor(int code);
@@ -14,13 +14,13 @@ void mainBox();
 void main_menu();
 
 
+
 // ========== Main Function ==========
 
 int main()
 {
     system("color F0");
     main_menu();
-    student();
     return 0;
 }
 
