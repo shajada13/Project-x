@@ -10,6 +10,12 @@ char getch_echo()
     //putchar(c);  // Echo the character
     return c;
 }
+char getch()
+{
+    char c = getchar();
+    //putchar(c);  // Echo the character
+    return c;
+}
 
 // ========== Cursor Moving Function ==========
 
@@ -159,4 +165,24 @@ void lowerLine()
         printf("%c", 205); // Lower Horizontal Line
     }
     printf("%c", 188); // Bottom Right Corner
+}
+
+void twoline(int i)
+{
+    moveXY(1, i);
+    printf("%c", 186); // Left T
+    moveXY(90, i);
+    printf("%c", 186); // Right T
+}
+void midline(int i)
+{
+    moveXY(1, i);
+    printf("%c", 204); // Left T
+    for(int j = 1; j < 89; j++)
+    {
+        moveXY(j + 1, i);
+        printf("%c", 205); // Upper Horizontal Line
+    }
+    moveXY(90, i);
+    printf("%c", 185); // Right T
 }

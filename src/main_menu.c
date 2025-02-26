@@ -51,9 +51,9 @@ void main_menu() {
         printf("eports");
 
         moveXY(81, 4);
-        printf("B");
+        printf("S");
         moveXY(82, 4);
-        printf("uilding");
+        printf("etting");
 
         textColor(30);
         moveXY(40, 16);
@@ -74,10 +74,9 @@ void main_menu() {
         char ch = toupper(getch_echo());
 
         switch (ch) {
-            // case 'B': 
-            //     building();
-
-            //     return;
+            case 'R': 
+                room_show();
+                return;
             case 'S': 
                 student();
                 return;

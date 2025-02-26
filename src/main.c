@@ -3,7 +3,7 @@
 #include "../include/library.h"
 #include "../include/main_menu.h"
 #include "../include/student.h"
-
+#include "../include/room.h"
 
 
 void moveXY(int x, int y);
@@ -20,7 +20,9 @@ void main_menu();
 int main()
 {
     system("color F0");
+    
     main_menu();
+    
     return 0;
 }
 

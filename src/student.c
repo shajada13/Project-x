@@ -3,6 +3,9 @@
 #include <string.h>
 #include <ctype.h>
 #include "../include/library.h"
+#include <../include/room.h>
+
+
 void enroll();
 void show();
 int checkid(char id[]);
@@ -13,6 +16,8 @@ struct stdn
   char dep[50];
 };
 struct stdn temp1;
+
+    
 
 void student()
 {
@@ -40,7 +45,8 @@ void student()
         textColor(34);
         moveXY(3, 30);
         printf("Press First Charecter for further Menu... ");
-
+        moveXY(50, 30);
+        getchar();
         ch = toupper(getch_echo());
 
         switch (ch)
@@ -51,34 +57,17 @@ void student()
           case 'S':
                   show();
                   break;
+          default:
+                  return;
         }
 
-        // For next task!
-        // switch(ch)
-        // {
-        //   case 'A':animation();
-        //        supp_entry();
-        //        break;
-        //   case 'U':animation();
-        //        sup_update();
-        //        break;
-        //   case 'L':animation();
-        //        supp_list();
-        //        break;
-        //   case 'S':search();
-        //        break;
-        //   case 'M':main_menu();
-        //        break;
-        //   default://textcolor(4+BLINK);
-        //       moveXY(11,34);
-        //       printf("Plese Enter right character ONLY (A,L,U,S,M).");
-        //       getch();
-        // }
+        
       
       
     
 }
 void enroll(){
+    
     system("cls");
     box1();
     mainBox();
@@ -116,10 +105,14 @@ void enroll(){
       moveXY(42, 19);
       fgets(temp1.dep,50,stdin);
       temp1.dep[strcspn(temp1.dep, "\n")] = '\0';
-
+      system("cls");
+     
       fwrite(&temp1,sizeof(temp1),1,fp);
+      
       fclose(fp);
+      
       student();
+        
 }
 void show(){
     system("cls");
