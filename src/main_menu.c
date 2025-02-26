@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include "../include/library.h"
 #include "../include/main_menu.h"
+#include "../include/student.h"
 
 int i;
 
@@ -16,9 +17,9 @@ void main_menu()
     textColor(31);
 
     moveXY(3, 4);
-    printf("S");
-    moveXY(4, 4);
-    printf("tudent");
+    printf("Student");
+    // moveXY(4, 4);
+    // printf("tudent");
 
     moveXY(14, 4);
     printf("R");
@@ -70,5 +71,11 @@ void main_menu()
     box1();
     mainBox();
 
+    moveXY(45, 28);
     char ch = toupper(getch_echo());
+    switch(ch)
+    {
+        case 'S': student();
+        break;
+    }
 }
