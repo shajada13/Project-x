@@ -8,5 +8,8 @@ void blink_letter(char word[], int times, int delay);
 void resetTextColor();
 void box1();
 void mainBox();
-
+void animation();
+void line();
+void upperLine();
+void lowerLine();
 #endif // LIBRARY_H

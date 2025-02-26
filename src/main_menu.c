@@ -6,7 +6,7 @@
 #include "../include/main_menu.h"
 #include "../include/student.h"
 
-int i;
+
 
 // ========== Main Menu ==========
 
