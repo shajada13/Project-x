@@ -21,7 +21,6 @@ int main()
 {
     system("color F0");
     main_menu();
-    student();
     return 0;
 }
 
