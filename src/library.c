@@ -47,6 +47,22 @@ void resetTextColor()
 //     printf("\n");
 // }
 
+void animation()
+{
+	for (i=45; i>=1; i--)
+	{
+		Sleep(30);
+		moveXY(1,i);
+		//clreol();
+	}
+	for (i=1; i<=20; i++)
+	{
+		//clreol();
+		Sleep(40);
+		moveXY(1,i);
+	}
+}
+
 void box1()
 {
     moveXY(1, 3);
@@ -54,7 +70,7 @@ void box1()
     for(i = 1; i < 89; i++)
     {
         moveXY(i + 1, 3);
-        printf("="); // Upper Horizontal Line
+        printf("%c", 205); // Upper Horizontal Line
     }
     moveXY(90, 3);
     printf("%c", 187); // Top Right Corner
