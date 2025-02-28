@@ -1,16 +1,12 @@
 #ifndef ROOM_H
 #define ROOM_H
 
-void initialize_seats();
 void room_menu();
-void room_show();
+void loadFromFile(SeatData *data);
+void saveToFile(SeatData *data);
+void initialize_seat(SeatData *data);
 
-#define FLOORS 10
-#define ROOMS 5
-#define SEATS 3
-
-struct SeatData {
-    long long int seat_status[FLOORS][ROOMS][SEATS]; // 0 = Available, 1 = Occupied
-};
+void room_grid();
+void resetroomdata() ;
 
 #endif // ROOM_H

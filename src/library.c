@@ -10,11 +10,17 @@ char getch_echo()
     //putchar(c);  // Echo the character
     return c;
 }
-char getch()
-{
-    char c = getchar();
-    //putchar(c);  // Echo the character
-    return c;
+
+char getch() {
+    char buffer[10];  // Extra space to catch extra input
+    char choice;
+
+    // Get the input as a string (fgets handles buffer overflow and newlines)
+    if (fgets(buffer, sizeof(buffer), stdin)) {
+        sscanf(buffer, " %c", &choice);  // Extract the first non-whitespace char
+        return toupper(choice);
+    }
+    return '\0';  // Return null character if fgets fails
 }
 
 // ========== Cursor Moving Function ==========
@@ -71,75 +77,16 @@ void animation()
 
 void box1()
 {
-    moveXY(1, 3);
-    printf("%c", 201); // Top Left Corner
-    for(i = 1; i < 89; i++)
-    {
-        moveXY(i + 1, 3);
-        printf("%c", 205); // Upper Horizontal Line
-    }
-    moveXY(90, 3);
-    printf("%c", 187); // Top Right Corner
-    moveXY(1, 3);
-    for (i = 4; i < 5; i++)
-    {
-        moveXY(1, i);
-        printf("%c", 186); // Left Vertical Line
-    }
-    moveXY(1, 5);
-    printf("%c", 200); // Bottom Left Corner
-
-    for(i = 1; i < 89; i++)
-    {
-        moveXY(i + 1, 5);
-        printf("%c", 205); // Lower Horizontal Line
-    }
-
-    moveXY(1, 9);
-    for (i = 4; i < 5; i++)
-    {
-        moveXY(90, i);
-        printf("%c", 186); // Right Vertical Line
-    }
-    moveXY(90, 5);
-    printf("%c", 188); // Bottom Right Corner
+    box(1,1,90,4);
 }
 
 void mainBox()
 {
-    moveXY(1, 6);
-    printf("%c", 201); // Top Left Corner
-    for(i = 1; i < 89; i++)
-    {
-        moveXY(i + 1, 6);
-        printf("%c", 205); // Upper Horizontal Line
-    }
-
-    moveXY(90, 6);
-    printf("%c", 187); // Top Right Corner
-    for (i = 5; i < 40; i++)
-    {
-        moveXY(1, i + 2);
-        printf("%c", 186); // Left Vertical Line
-    }
-
-    for (i = 7; i < 42; i++)
-    {
-        moveXY(90, i);
-        printf("%c", 186); // Right Vertical Line
-    }
-
-    moveXY(1, 42);
-    printf("%c", 200); // Bottom Left Corner
-    for (i = 1; i < 89; i++)
-    {
-        moveXY(i + 1, 42);
-        printf("%c", 205); // Lower Horizontal Line
-    }
-
-    moveXY(90, 42);
-    printf("%c", 188); // Bottom Right Corner
-
+    box(1,5,90,35);
+    
+}
+void lowerBox(){
+    box(1,36,90,38);
 }
 void line()
 {
@@ -167,22 +114,37 @@ void lowerLine()
     printf("%c", 188); // Bottom Right Corner
 }
 
-void twoline(int i)
-{
-    moveXY(1, i);
-    printf("%c", 186); // Left T
-    moveXY(90, i);
-    printf("%c", 186); // Right T
-}
-void midline(int i)
-{
-    moveXY(1, i);
-    printf("%c", 204); // Left T
-    for(int j = 1; j < 89; j++)
-    {
-        moveXY(j + 1, i);
-        printf("%c", 205); // Upper Horizontal Line
+
+
+void box(int ulx, int uly, int brx, int bry) {
+    moveXY(ulx, uly);
+    printf("%c", 201); // ╔ Top Left Corner
+    for (int i = ulx + 1; i < brx; i++) {   
+        moveXY(i, uly);
+        printf("%c", 205); // ═ Upper Horizontal Line
     }
-    moveXY(90, i);
-    printf("%c", 185); // Right T
+    moveXY(brx, uly);
+    printf("%c", 187); // ╗ Top Right Corner
+    for (int i = uly + 1; i < bry; i++) {
+        moveXY(ulx, i);
+        printf("%c", 186); // ║ Left Vertical Line
+        moveXY(brx, i);
+        printf("%c", 186); // ║ Right Vertical Line
+    }
+    moveXY(ulx, bry);
+    printf("%c", 200); // ╚ Bottom Left Corner
+    for (int i = ulx + 1; i < brx; i++) {
+        moveXY(i, bry);
+        printf("%c", 205); // ═ Lower Horizontal Line
+    }
+    moveXY(brx, bry);
+    printf("%c", 188); // ╝ Bottom Right Corner
+}
+
+void reset_student_data() {
+    if (remove("../data/studen.dat") == 0) {
+        printf("Data file deleted successfully.\n");
+    } else {
+        printf("No data file found to delete.\n");
+    }
 }
