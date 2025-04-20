@@ -5,124 +5,122 @@
 #include <../include/library.h>
 #include <../include/room.h>
 
+SeatData seatdata;
 
-
-
-struct SeatData seatData;
-
-// Initialize all seats as available (0) and save to file
-void initialize_seats() {
-    FILE *fp;
-    fp = fopen("../data/rooms.dat", "wb");  // Open file for writing (binary mode)
-    if (fp == NULL) {
-        printf("\n Cannot open file!!");
-        exit(0);
-    }
-
-    // Set all seat statuses to 0 (available)
-    for (int i = 0; i < FLOORS; i++) {
-        for (int j = 0; j < ROOMS; j++) {
-            for (int k = 0; k < SEATS; k++) {
-                seatData.seat_status[i][j][k] = 0;  // Mark seat as available
+void initialize_seat(SeatData *data) {
+    for (int f = 0; f < FLOORS; f++) {
+        for (int r = 0; r < ROOMS; r++) {
+            for (int s = 0; s < SEATS; s++) {
+                data->floors[f].rooms[r].seats[s].availability = 1; // Default available
+                strcpy(data->floors[f].rooms[r].seats[s].saved_id, ""); // Empty ID
             }
         }
     }
-
-    // Save the seat data to the file
-    fwrite(&seatData, sizeof(seatData), 1, fp);
-
-      // Close the file
+}
+void saveToFile(SeatData *data) {
+    FILE *file = fopen("../data/rooms.dat", "wb");
+    if (!file) {
+        printf("Error saving data.\n");
+        return;
+    }
+    fwrite(data, sizeof(SeatData), 1, file);
+    fclose(file);
 }
 
-void room_menu() {
-    FILE *fp;
-    fp = fopen("../data/rooms.dat", "rb");  // Open file for reading (binary mode)
-    if (fp == NULL) {
-        printf("\n Cannot open file!!");
-        exit(0);
+void loadFromFile(SeatData *data) {
+    FILE *file = fopen("../data/rooms.dat", "rb");
+    if (!file) {
+        printf("No existing data found. Initializing...\n");
+        initialize_seat(data);
+        return;
     }
-    fread(&seatData, sizeof(seatData), 1, fp);
-    seatData.seat_status[2][3][2] = 1;//randomly setting some seats as reserved
-    seatData.seat_status[5][3][1] = 1;
-    seatData.seat_status[7][4][0] = 1;
-    seatData.seat_status[9][2][2] = 1;
-    textColor(30);
-    moveXY(1, 6);
-    upperLine();    // Upper Horizontal Line
-    
-    int i = 7;
-    
-    for(int floor = 10;floor>0;floor--)
-    {
-        moveXY(1, i);
-
-        for(int room=1;room<=5;room++)
-        {
-            moveXY(room*18-12, i);
-            printf("Room :%d",room);
-            
-            moveXY(room*18, i);
-            printf("%c", 179); //Vertical Line
+    fread(data, sizeof(SeatData), 1, file);
+    fclose(file);
+}
+void resetroomdata() {
+    if (remove("../data/rooms.dat") == 0) {
+        printf("Data file deleted successfully.\n");
+    } else {
+        printf("No data file found to delete.\n");
+    }
+}
+void printSeats(SeatData *data) {
+    for (int f = 0; f < FLOORS; f++) {
+        for (int r = 0; r < ROOMS; r++) {
+            for (int s = 0; s < SEATS; s++) {
+                printf("Floor %d, Room %d, Seat %d - Availability: %d, ID: %s\n",
+                       f + 1, r + 1, s + 1,
+                       data->floors[f].rooms[r].seats[s].availability,
+                       data->floors[f].rooms[r].seats[s].saved_id);
+            }
         }
-        twoline(i);
-        i++;
-        
-        for(int room=1;room<=5;room++)
-        {
-            moveXY(room*18-11, i);
-            int count=0;
-            for(int seat=1;seat<=3;seat++)
-            {
-                if(seatData.seat_status[floor-1][room-1][seat-1]==0)
-                {   
-                    textColor(32);
-                    printf("%c ",254); 
-                    textColor(30);
-                }
-                else
-                {   
+    }
+}
+void room_grid(){
+    box(1,5,38,35);
+    box(40,5,90,35);
+    for(int i = 50;i<90;i=i+10){
+        moveXY(i,5);
+        printf("%c",203); // ╦	double down and horizontal
+        for(int j=6;j<35;j++){
+            moveXY(i,j);
+            printf("%c", 186); // ║ Right Vertical Line
+        }
+        moveXY(i,35);
+        printf("%c",202); // ╩	double up and horizontal
+
+    }
+    for(int i = 8;i<35;i=i+3){
+        moveXY(40,i);
+        printf("%c",204); // ╠	double vertical and right
+        for(int j = 41;j<90;j++){
+            moveXY(j,i);
+            
+            if(j%10==0){
+                printf("%c", 206); // ╬	double vertical and horizontal
+            }else{
+                printf("%c", 205); // ═ Horizontal Line
+            }
+        }
+        moveXY(90,i);
+        printf("%c",185); // ╣	double vertical and left
+    }
+    loadFromFile(&seatdata);
+    
+    for(int i = 9;i>=0;i--)
+    {   
+        moveXY(92,(i+1)*3+3);
+        printf("Floor : %d",i+1);
+        for (int j = 0; j < 5; j++)
+        {   
+            moveXY((j+1)*10+34,(i+1)*3+3);
+            printf("R:%d",j+1);
+            for (int k = 0; k < 3; k++)
+            {   
+                
+                moveXY((j+1)*10+32+k*2,(i+1)*3+4);
+                if(seatdata.floors[i].rooms[j].seats[k].availability==0){
                     textColor(31);
-                    printf("%c ",254);
-                    textColor(30);
+                    printf(" %c",254); //	■	black square
+                    textColor(0);
+                }else{
+                    textColor(32);
+                    printf(" %c",254); //	■	black square
+                    textColor(0);
                 }
+                
             }
             
-            
-            
-            moveXY(room*18, i);
-            printf("%c", 179); //Vertical Line
         }
-        moveXY(92, i);
-        printf("Floor %d",floor);
-        twoline(i);
-        i++;
-        for(int room=1;room<=5;room++)
-        {
-            moveXY(room*18-13, i);
-            printf("Seat 1 2 3",room);
-            
-            moveXY(room*18, i);
-            printf("%c", 179); //Vertical Line
-        }
-        twoline(i);
-        i++;
-        moveXY(1, i);
-        midline(i);
-        i++;
+        
     }
-    moveXY(1, i-1);
-    lowerLine();    // Lower Horizontal Line
-    
-
-    fclose(fp);
-    
 }
-
-void room_show(){
+void room_menu(){
     system("cls");
     box1();
-    textColor(31);
-    moveXY(41, 4);
+    moveXY(41, 2);
     printf("Rooms");
-    room_menu();
+    room_grid();
+    getch_echo();
 }
+

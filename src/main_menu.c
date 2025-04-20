@@ -13,77 +13,59 @@
 // ========== Main Menu ==========
 
 void main_menu() {
-    while (1) {
-        system("cls"); // Clear screen
-
-        textColor(31);
-        moveXY(3, 4);
-        printf("Student");
-
-        moveXY(14, 4);
-        printf("R");
-        moveXY(15, 4);
-        printf("oom");
-
-        moveXY(22, 4);
-        printf("M");
-        moveXY(23, 4);
-        printf("eals");
-
-        moveXY(31, 4);
-        printf("P");
-        moveXY(32, 4);
-        printf("ayments");
-
-        moveXY(43, 4);
-        printf("M");
-        moveXY(44, 4);
-        printf("aintenance");
-
-        moveXY(58, 4);
-        printf("V");
-        moveXY(59, 4);
-        printf("isitors");
-
-        moveXY(70, 4);
-        printf("R");
-        moveXY(71, 4);
-        printf("eports");
-
-        moveXY(81, 4);
-        printf("S");
-        moveXY(82, 4);
-        printf("etting");
-
-        textColor(30);
-        moveXY(40, 16);
-        printf("Welcome to...");
-        
-        moveXY(30, 17);
-        printf("STUDENT DORM ADMINISTRATION SYSTEM");
-
-        textColor(34);
-        moveXY(3, 28);
-        printf("Press First Character for further Menu... ");
-
-        textColor(30);
+    char ch;
+    do{
+        system("cls");
         box1();
         mainBox();
+        lowerBox();
+        moveXY(6, 2);  printf("1");
+        moveXY(3, 3); printf("Student");
 
-        moveXY(45, 28);
-        char ch = toupper(getch_echo());
+        moveXY(16, 2); printf("2");
+        moveXY(14, 3); printf("Room");
 
+        moveXY(24, 2); printf("3");
+        moveXY(22, 3); printf("Meals");
+
+        moveXY(35, 2); printf("5");
+        moveXY(31, 3); printf("Payments");
+
+        moveXY(48, 2); printf("6");
+        moveXY(43, 3); printf("Maintenance");
+
+        moveXY(62, 2); printf("7");
+        moveXY(58, 3); printf("Visitors");
+
+        moveXY(73, 2); printf("8");
+        moveXY(70, 3); printf("Reports");
+
+        moveXY(84, 2); printf("9");
+        moveXY(81, 3); printf("Setting");
+
+        moveXY(40, 16); printf("Welcome to...");
+        moveXY(30, 17); printf("STUDENT DORM ADMINISTRATION SYSTEM");
+        
+
+        moveXY(3, 37);printf("Press First Character for further Menu... ");
+        moveXY(45, 37);
+        ch =(getch());
+           
         switch (ch) {
-            case 'R': 
-                room_show();
-                return;
-            case 'S': 
-                student();
-                return;
+            case 'S':
+            case '1':
+                student_menu();
+                break;
+            case 'R':
+            case '2':
+                room_menu();
+                break;
             default: 
-                moveXY(45, 29);
-                printf("Invalid input! Press any key to retry...");
-                getch_echo(); // Wait for user input before retrying
+                moveXY(3, 37);
+                printf("Invalid input! Press any key to retry...  ");
+                getch_echo();
         }
-    }
+    }while (ch!='Q');
+    system("cls");
+    return;
 }

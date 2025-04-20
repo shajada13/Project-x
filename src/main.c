@@ -6,24 +6,15 @@
 #include "../include/room.h"
 
 
-void moveXY(int x, int y);
-void textColor(int code);
-void resetTextColor();
-void box1();
-void mainBox();
-void main_menu();
-
-
-
 // ========== Main Function ==========
 
 int main()
-{
-    system("color F0");
+{   
+    
     
     main_menu();
-    
     return 0;
+    
 }
 
 
