@@ -49,9 +49,9 @@ void printSeats(SeatData *data) {
         for (int r = 0; r < ROOMS; r++) {
             for (int s = 0; s < SEATS; s++) {
                 printf("Floor %d, Room %d, Seat %d - Availability: %d, ID: %s\n",
-                       f + 1, r + 1, s + 1,
-                       data->floors[f].rooms[r].seats[s].availability,
-                       data->floors[f].rooms[r].seats[s].saved_id);
+                    f + 1, r + 1, s + 1,
+                    data->floors[f].rooms[r].seats[s].availability,
+                    data->floors[f].rooms[r].seats[s].saved_id);
             }
         }
     }
@@ -101,11 +101,11 @@ void room_grid(){
                 moveXY((j+1)*10+32+k*2,(i+1)*3+4);
                 if(seatdata.floors[i].rooms[j].seats[k].availability==0){
                     textColor(31);
-                    printf(" %c",254); //	■	black square
+                    printf(" %c",254); //	■	 square
                     textColor(0);
                 }else{
                     textColor(32);
-                    printf(" %c",254); //	■	black square
+                    printf(" %c",254); //	■	 square
                     textColor(0);
                 }
                 
@@ -114,6 +114,7 @@ void room_grid(){
         }
         
     }
+    moveXY(2, 36);
 }
 void room_menu(){
     system("cls");
