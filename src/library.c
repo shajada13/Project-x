@@ -1,7 +1,7 @@
 #include "../include/library.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <windows.h>
+#include<ctype.h>
 #include <time.h>
 int i;
 
@@ -65,19 +65,21 @@ void line()
         printf("═"); //  Horizontal Line
     }
 }
+
 void upperLine()
 {   
     printf("╔"); // Top Left Corner
-    for (i = 1; i < 89; i++)
+    for (int i = 1; i < 89; i++)
     {
         printf("═"); //  Horizontal Line
     }
     printf("╗"); // Top Right Corner
 }
+
 void lowerLine()
 {
     printf("╚"); // Bottom Left Corner
-    for (i = 1; i < 89; i++)
+    for ( int i = 1; i < 89; i++)
     {
         printf("═"); // Lower Horizontal Line
     }
@@ -142,6 +144,7 @@ Date addDaysToDate(Date start, int days_to_add) {
 
     return result;
 }
+
 // Converts Date to time_t
 time_t convertToTimeT(Date d) {
     struct tm t = {0};

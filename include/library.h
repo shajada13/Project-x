@@ -15,7 +15,7 @@ void upperLine();
 void lowerLine();
 void box(int ulx, int uly, int brx, int bry) ;
 void reset_student_data();
-
+void graph_menu();
 #define FLOORS 10
 #define ROOMS 5
 #define SEATS 3

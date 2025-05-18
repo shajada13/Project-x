@@ -26,7 +26,7 @@ void main_menu() {
         moveXY(14, 3); printf("Room");
 
         moveXY(24, 2); printf("3");
-        moveXY(22, 3); printf("Meals");
+        moveXY(22, 3); printf("Graph");
 
         moveXY(35, 2); printf("5");
         moveXY(31, 3); printf("Payments");
@@ -60,6 +60,9 @@ void main_menu() {
             case 'R':
             case '2':
                 room_menu();
+                break;
+            case '3':
+                graph_menu();
                 break;
             default: 
                 moveXY(3, 37);
