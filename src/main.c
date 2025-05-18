@@ -10,7 +10,7 @@
 
 int main()
 {   
-    
+    system("chcp 65001"); // Set code page to UTF-8
     
     main_menu();
     return 0;

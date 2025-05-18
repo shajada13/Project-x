@@ -18,6 +18,8 @@ struct stdn {
     int room;
     int floor;
     int seat;
+    float amount;
+    Date payment_date;
 };
 
 void student_menu() {
@@ -70,7 +72,7 @@ void student_menu() {
                 printf("Invalid input! Press any key to retry...   ");
                 getch_echo();
         }
-    } while (1);
+    } while (ch!='Q');
 }
 
 
@@ -123,12 +125,14 @@ void enroll() {
     room_grid();
     moveXY(3,6); printf("Name : %s",temp.name);
     moveXY(3,8); printf("ID   : %s",temp.id);
-    moveXY(3,10); printf("DEP  : %s",temp.dep);  // Fixed department display
+    moveXY(3,10); printf("DEP  : %s",temp.dep);
 
     SeatData seatdata;
     loadFromFile(&seatdata);
     int f, r, s;
-
+    
+    int day, month, year;
+    float amount = 0.0;
     while (1) {
         moveXY(3,12); printf("Floor : ");
         scanf("%d", &f);
@@ -138,6 +142,7 @@ void enroll() {
         scanf("%d", &s);
 
         // Validate seat selection
+
         if (f < 1 || f > FLOORS || r < 1 || r > ROOMS || s < 1 || s > SEATS) {
             moveXY(3, 18);
             printf("Invalid floor/room/seat number! Try again.");
@@ -150,9 +155,30 @@ void enroll() {
             printf("Seat is already occupied! Choose another.");
             continue;
         }
-
+        
+        moveXY(3,18); printf("Day : ");
+        scanf("%d", &day);
+        moveXY(3,20); printf("Month : ");
+        scanf("%d", &month);
+        moveXY(3,22); printf("Year : ");
+        scanf("%d", &year);
+        if (day < 1 || day > 31 || month < 1 || month > 12 || year > 2025) {
+            moveXY(3, 24);
+            printf("Invalid date! Try again.");
+            continue;
+        }
+        moveXY(3,24); printf("Payment amount : ");
+        scanf("%f", &amount);
+        if (amount <= 0) {
+            moveXY(3, 26);
+            printf("Invalid amount! Try again.");
+            continue;
+        }
         break;  // Exit loop if valid seat is chosen
     }
+    
+    // Save student details
+
 
     // Mark seat as occupied and save student ID
     seatdata.floors[f-1].rooms[r-1].seats[s-1].availability = 0;
@@ -162,7 +188,11 @@ void enroll() {
     temp.floor = f;
     temp.room = r;
     temp.seat = s;
-    
+    temp.payment_date.day = day;
+    temp.payment_date.month = month;
+    temp.payment_date.year = year;
+    temp.amount = amount;
+
     fwrite(&temp, sizeof(temp), 1, fp);
     fclose(fp);
     
@@ -172,6 +202,10 @@ void enroll() {
 }
 
 
+
+
+#define STUDENTS_PER_PAGE 7
+
 void show() {
     system("cls");
     box1();
@@ -179,59 +213,100 @@ void show() {
     printf("Students");
 
     struct stdn temp;
-    FILE *fp = fopen("../data/student.dat", "rb"); // Use "rb" for binary mode
+    FILE *fp = fopen("../data/student.dat", "rb");
     if (fp == NULL) {
         printf("\nCannot open file!!");
         getch_echo();
         return;
     }
 
-    moveXY(1, 6);
-    upperLine();  // Upper Horizontal Line
+    int count = 0;
+    char choice;
 
-    int i = 7;
-    while (fread(&temp, sizeof(struct stdn), 1, fp) == 1) {
-        moveXY(1, i);
-        printf("%c", 186); // Left Vertical Line
-        printf(" Name : %-15s ", temp.name);
-        moveXY(30, i);
-        printf("ID : %-10s ", temp.id);
-        moveXY(50, i);
-        printf("Dep: %-10s ", temp.dep);
-        moveXY(90, i);
-        printf("%c", 186); // Right Vertical Line
-        i++;
-        moveXY(3, i);
-        printf("Floor: %-2d Room: %-2d Seat: %-2d ", temp.floor, temp.room, temp.seat);
-        moveXY(1, i);
-        printf("%c", 186); // Left Vertical Line
-        moveXY(90, i);
-        printf("%c", 186); // Right Vertical Line
-        i++;
+    while (1) {
+        int studentsShown = 0;
+        system("cls");
+        box1();
+        moveXY(41, 2);
+        printf("Students");
+        moveXY(1, 6);
+        upperLine();
 
-        moveXY(1,i);
-        printf("%c",204); // ╠	double vertical and right
-        for (int j = 2; j < 90; j++)
-        {
-            moveXY(j,i);
-            printf("%c", 205); // ═ Horizontal Line
+        int i = 7;
+
+        while (studentsShown < STUDENTS_PER_PAGE && fread(&temp, sizeof(struct stdn), 1, fp) == 1) {
+            moveXY(1, i);
+            printf("║ Name : %-30s ", temp.name);
+            moveXY(3, i+1);
+            printf("ID : %-20s ", temp.id);
+            moveXY(3, i+2);
+            printf("Dep: %-10s ", temp.dep);
+            moveXY(90, i); printf("║"); 
+
+            moveXY(80, i);
+            printf("Floor: %-2d", temp.floor);
+            moveXY(80, i+1);
+            printf("Room : %-2d",temp.room);
+            moveXY(80, i+2);
+            printf("Seat : %-2d",temp.seat);
+            moveXY(1, i); printf("║"); moveXY(90, i); printf("║"); i++;
+
+            moveXY(40, i-1);
+            printf("Payment amount: %.2f ৳ ", temp.amount);
+            moveXY(40, i);
+            printf("Date of enrollment: %02d/%02d/%04d", temp.payment_date.day, temp.payment_date.month, temp.payment_date.year);
+            moveXY(1, i); printf("║"); moveXY(90, i); printf("║"); i++;
+
+            moveXY(40, i);
+            Date temp_date = addDaysToDate(temp.payment_date, temp.amount / 100);
+            printf("Last Valid Date   : %02d/%02d/%04d", temp_date.day, temp_date.month, temp_date.year);
+            moveXY(1, i); printf("║"); moveXY(90, i); printf("║"); i++;
+
+            moveXY(1, i);
+            printf("╠");
+            for (int j = 2; j < 90; j++) {
+                moveXY(j, i);
+                printf("═");
+            }
+            moveXY(90, i);
+            printf("╣");
+            i++;
+
+            studentsShown++;
+            count++;
         }
-        moveXY(90,i);
-        printf("%c",185); // ╣	double vertical and left
-        
-        
-        i++;
+
+        if (studentsShown == 0) break;
+
+        // Proper bottom corner
+        i--;
+        moveXY(1, i);
+        printf("╚");
+        for (int j = 2; j < 90; j++) {
+            moveXY(j, i);
+            printf("═");
+        }
+        moveXY(90, i);
+        printf("╝");
+
+        // Prompt
+        box(1, i + 1, 90, i + 3);
+        moveXY(3, i + 2);
+        if (feof(fp)) {
+            printf("End of list. Press Enter to exit...");
+            getch_echo();
+            break;
+        } else {
+            printf("Press 'n' for next, 'q' to quit...");
+            choice = getch();
+            if (choice == 'q' || choice == 'Q') break;
+        }
     }
 
-    moveXY(1, i-1);
-    lowerLine();  // Lower Horizontal Line
     fclose(fp);
-    box(1, i+1, 105, i+3);
-    moveXY(3, i+2);
-    printf("Press Enter to continue....");
-    
-    getch_echo();
 }
+
+
 
 
 int check_if_already_enrolled(char id[]) {

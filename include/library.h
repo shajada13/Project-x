@@ -37,4 +37,21 @@ typedef struct {
 typedef struct {
     Floor floors[FLOORS];
 } SeatData;
+
+
+// Payment record structure
+
+#define MAX_PAYMENTS 100
+
+
+typedef struct {
+    int day;
+    int month;
+    int year;
+} Date;
+Date addDaysToDate(Date start, int days_to_add);
+
+
+
+
 #endif // LIBRARY_H

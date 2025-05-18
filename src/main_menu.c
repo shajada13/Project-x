@@ -47,8 +47,9 @@ void main_menu() {
         moveXY(30, 17); printf("STUDENT DORM ADMINISTRATION SYSTEM");
         
 
-        moveXY(3, 37);printf("Press First Character for further Menu... ");
-        moveXY(45, 37);
+        moveXY(3, 37);printf("Enter the number of the menu you want to access...");
+        
+        moveXY(55, 37);
         ch =(getch());
            
         switch (ch) {
