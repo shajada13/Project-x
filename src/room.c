@@ -56,66 +56,70 @@ void printSeats(SeatData *data) {
         }
     }
 }
-void room_grid(){
-    box(1,5,38,35);
-    box(40,5,90,35);
-    for(int i = 50;i<90;i=i+10){
-        moveXY(i,5);
-        printf("%c",203); // ╦	double down and horizontal
-        for(int j=6;j<35;j++){
-            moveXY(i,j);
-            printf("%c", 186); // ║ Right Vertical Line
-        }
-        moveXY(i,35);
-        printf("%c",202); // ╩	double up and horizontal
+void room_grid() {
+    box(1, 5, 38, 35);    // Left section
+    box(40, 5, 90, 35);   // Room grid area
 
+    for (int i = 50; i < 90; i += 10) {
+        moveXY(i, 5);
+        printf("╦"); // double down and horizontal
+
+        for (int j = 6; j < 35; j++) {
+            moveXY(i, j);
+            printf("║"); // Right Vertical Line
+        }
+
+        moveXY(i, 35);
+        printf("╩"); // double up and horizontal
     }
-    for(int i = 8;i<35;i=i+3){
-        moveXY(40,i);
-        printf("%c",204); // ╠	double vertical and right
-        for(int j = 41;j<90;j++){
-            moveXY(j,i);
-            
-            if(j%10==0){
-                printf("%c", 206); // ╬	double vertical and horizontal
-            }else{
-                printf("%c", 205); // ═ Horizontal Line
+
+    for (int i = 8; i < 35; i += 3) {
+        moveXY(40, i);
+        printf("╠"); // double vertical and right
+
+        for (int j = 41; j < 90; j++) {
+            moveXY(j, i);
+
+            if (j % 10 == 0) {
+                printf("╬"); // double vertical and horizontal
+            } else {
+                printf("═"); // Horizontal Line
             }
         }
-        moveXY(90,i);
-        printf("%c",185); // ╣	double vertical and left
+
+        moveXY(90, i);
+        printf("╣"); // double vertical and left
     }
+
     loadFromFile(&seatdata);
-    
-    for(int i = 9;i>=0;i--)
-    {   
-        moveXY(92,(i+1)*3+3);
-        printf("Floor : %d",i+1);
-        for (int j = 0; j < 5; j++)
-        {   
-            moveXY((j+1)*10+34,(i+1)*3+3);
-            printf("R:%d",j+1);
-            for (int k = 0; k < 3; k++)
-            {   
-                
-                moveXY((j+1)*10+32+k*2,(i+1)*3+4);
-                if(seatdata.floors[i].rooms[j].seats[k].availability==0){
-                    textColor(31);
-                    printf(" %c",254); //	■	 square
+
+    for (int i = 9; i >= 0; i--) {
+        moveXY(92, (i + 1) * 3 + 3);
+        printf("Floor : %d", i + 1);
+
+        for (int j = 0; j < 5; j++) {
+            moveXY((j + 1) * 10 + 34, (i + 1) * 3 + 3);
+            printf("R:%d", j + 1);
+
+            for (int k = 0; k < 3; k++) {
+                moveXY((j + 1) * 10 + 32 + k * 2, (i + 1) * 3 + 4);
+
+                if (seatdata.floors[i].rooms[j].seats[k].availability == 0) {
+                    textColor(31); // red
+                    printf("■");
                     textColor(0);
-                }else{
-                    textColor(32);
-                    printf(" %c",254); //	■	 square
+                } else {
+                    textColor(32); // green
+                    printf("■");
                     textColor(0);
                 }
-                
             }
-            
         }
-        
     }
+
     moveXY(2, 36);
 }
+
 void room_menu(){
     system("cls");
     box1();

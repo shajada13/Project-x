@@ -15,7 +15,7 @@ void upperLine();
 void lowerLine();
 void box(int ulx, int uly, int brx, int bry) ;
 void reset_student_data();
-
+void graph_menu();
 #define FLOORS 10
 #define ROOMS 5
 #define SEATS 3
@@ -37,4 +37,21 @@ typedef struct {
 typedef struct {
     Floor floors[FLOORS];
 } SeatData;
+
+
+// Payment record structure
+
+#define MAX_PAYMENTS 100
+
+
+typedef struct {
+    int day;
+    int month;
+    int year;
+} Date;
+Date addDaysToDate(Date start, int days_to_add);
+
+
+
+
 #endif // LIBRARY_H
