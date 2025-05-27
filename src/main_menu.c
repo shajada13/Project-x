@@ -19,20 +19,20 @@ void main_menu() {
         box1();
         mainBox();
         lowerBox();
-        moveXY(6, 2);  printf("1");
-        moveXY(3, 3); printf("Students");
+        moveXY(15, 2);  printf("1");
+        moveXY(12, 3); printf("Students");
 
-        moveXY(16, 2); printf("2");
-        moveXY(14, 3); printf("Enroll");
+        moveXY(30, 2); printf("2");
+        moveXY(28, 3); printf("Enroll");
 
-        moveXY(24, 2); printf("3");
-        moveXY(22, 3); printf("rooms");
+        moveXY(45, 2); printf("3");
+        moveXY(43, 3); printf("rooms");
 
-        moveXY(35, 2); printf("4");
-        moveXY(31, 3); printf("Payments");
+        moveXY(60, 2); printf("4");
+        moveXY(57, 3); printf("Payments");
 
-        moveXY(48, 2); printf("5");
-        moveXY(43, 3); printf("Graphs");
+        moveXY(75, 2); printf("5");
+        moveXY(73, 3); printf("Graphs");
 
 
         moveXY(40, 16); printf("Welcome to...");

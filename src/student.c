@@ -635,23 +635,18 @@ void payment_menu() {
         int end = start + STUDENTS_PER_PAGE;
         if (end > total) end = total;
         moveXY(3, 6);
-        printf("%-3s %-20s %-20s %-8s %-10s\n", "No", "ID", "Name", "Balance", "Owes");
+        printf("%-3s %-19s %-31s %-20s %-10s\n", "No", "ID", "Name", "Balance", "Owes");
         middleLine();
         moveXY(1, 8);
         int k = 8;
         for (int i = start; i < end; ++i) {
             int due_days = calculateDueDays(list[i]);
             float due_amount = calculateDueAmount(due_days);
-            if (due_days > 0) {
-                printf("\033[31m"); // Red color for overdue
-            } else {
-                printf("\033[32m"); // Green color for on-time
-            }
+            
             moveXY(3,k++);
-            printf("%-3d %-15s %-25s %-8.2f ৳  %-8.2f ৳ [f=%d r=%d s=%d]\n",
-                   i, list[i].id, list[i].name, list[i].amount, due_amount,
-                   list[i].floor, list[i].room, list[i].seat);
-            resetTextColor();
+            printf("%-3d │ %-16s │ %-28s │ %-10.2f ৳    │   %-8.2f ৳\n",
+                   i, list[i].id, list[i].name, list[i].amount, due_amount);
+            
             middleLine_small();
             k++;
         }
