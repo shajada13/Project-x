@@ -429,10 +429,10 @@ void enroll() {
     getch_echo();
 }
 
-
-
-
 #define STUDENTS_PER_PAGE 8
+
+void showStudentDetailsWithGrid(struct stdn *student);
+
 
 void show() {
     CLEAR_SCREEN();
@@ -461,6 +461,8 @@ void show() {
         upperLine();
 
         int i = 7;
+
+        fseek(fp, count * sizeof(struct stdn), SEEK_SET);
 
         while (studentsShown < STUDENTS_PER_PAGE && fread(&temp, sizeof(struct stdn), 1, fp) == 1) {
             moveXY(1, i);
@@ -506,7 +508,6 @@ void show() {
 
         if (studentsShown == 0) break;
 
-        // Proper bottom corner
         i--;
         moveXY(1, i);
         printf("╚");
@@ -517,22 +518,180 @@ void show() {
         moveXY(90, i);
         printf("╝");
 
-        // Prompt
-        box(1, i + 1, 90, i + 3);
+        box(1, i + 1, 90, i + 4);
         moveXY(3, i + 2);
+
         if (feof(fp)) {
-            printf("End of list. Press Enter to exit...");
-            getch_echo();
-            break;
+            printf("End of list. Press Enter to exit or type 'id': ");
         } else {
-            printf("Press 'n' for next, 'q' to quit...");
-            choice = getch();
-            if (choice == 'q' || choice == 'Q') break;
+            printf("n: next | q: quit | id: search by ID: ");
+        }
+
+        char input[30];
+        scanf("%s", input);
+
+        if (strcmp(input, "q") == 0 || strcmp(input, "Q") == 0) break;
+        else if (strcmp(input, "n") == 0 || strcmp(input, "N") == 0) continue;
+        else if (strcmp(input, "id") == 0) {
+            moveXY(45, i + 2);
+            printf("Enter ID: ");
+            scanf("%s", input);
+            rewind(fp);
+            int found = 0;
+            while (fread(&temp, sizeof(struct stdn), 1, fp) == 1) {
+                if (strcmp(temp.id, input) == 0) {
+                    showStudentDetailsWithGrid(&temp);
+                    found = 1;
+                    break;
+                }
+            }
+            if (!found) {
+                printf("\nNot found!");
+                getch_echo();
+                getch_echo();
+            }
         }
     }
 
     fclose(fp);
 }
+
+void showStudentDetailsWithGrid(struct stdn *student) {
+    CLEAR_SCREEN();
+    box1();
+    moveXY(42,2);
+    printf("Details");
+    moveXY(3, 8);
+    printf("Name: %s", student->name);
+    moveXY(3, 10);
+    printf("ID: %s", student->id);
+    moveXY(3, 12);
+    printf("Dept: %s", student->dep);
+    moveXY(3, 14);
+    printf("Floor: %d", student->floor);
+    moveXY(3, 16);
+    printf("Room: %d", student->room);
+    moveXY(3, 18);
+    printf("Seat: %d", student->seat);
+    moveXY(3, 20);
+    printf("Amount: %.2f", student->amount);
+    moveXY(3, 22);
+    printf("Enroll: %02d/%02d/%04d", student->payment_date.day, student->payment_date.month, student->payment_date.year);
+    moveXY(3, 24);
+    Date validDate = addDaysToDate(student->payment_date, student->amount / 100);
+    printf("Valid Until: %02d/%02d/%04d", validDate.day, validDate.month, validDate.year);
+
+    room_grid_highlight(student->floor, student->room, student->seat);
+
+    moveXY(3, 34);
+    printf("Press any key to continue...");
+    getch_echo();
+    getch_echo();
+}
+
+
+
+// #define STUDENTS_PER_PAGE 8
+
+// void show() {
+//     CLEAR_SCREEN();
+//     box1();
+//     moveXY(41, 2);
+//     printf("Students");
+
+//     struct stdn temp;
+//     FILE *fp = fopen("../data/student.dat", "rb");
+//     if (fp == NULL) {
+//         printf("\nCannot open file!!");
+//         getch_echo();
+//         return;
+//     }
+
+//     int count = 0;
+//     char choice;
+
+//     while (1) {
+//         int studentsShown = 0;
+//         CLEAR_SCREEN();
+//         box1();
+//         moveXY(41, 2);
+//         printf("Students");
+//         moveXY(1, 6);
+//         upperLine();
+
+//         int i = 7;
+
+//         while (studentsShown < STUDENTS_PER_PAGE && fread(&temp, sizeof(struct stdn), 1, fp) == 1) {
+//             moveXY(1, i);
+//             printf("║ Name : %-30s ", temp.name);
+//             moveXY(3, i+1);
+//             printf("ID : %-20s ", temp.id);
+//             moveXY(3, i+2);
+//             printf("Dep: %-10s ", temp.dep);
+//             moveXY(90, i); printf("║");
+
+//             moveXY(80, i);
+//             printf("Floor: %-2d", temp.floor);
+//             moveXY(80, i+1);
+//             printf("Room : %-2d",temp.room);
+//             moveXY(80, i+2);
+//             printf("Seat : %-2d",temp.seat);
+//             moveXY(1, i); printf("║"); moveXY(90, i); printf("║"); i++;
+
+//             moveXY(40, i-1);
+//             printf("Payment amount: %.2f ৳ ", temp.amount);
+//             moveXY(40, i);
+//             printf("Date of enrollment: %02d/%02d/%04d", temp.payment_date.day, temp.payment_date.month, temp.payment_date.year);
+//             moveXY(1, i); printf("║"); moveXY(90, i); printf("║"); i++;
+
+//             moveXY(40, i);
+//             Date temp_date = addDaysToDate(temp.payment_date, temp.amount / 100);
+//             printf("Last Valid Date   : %02d/%02d/%04d", temp_date.day, temp_date.month, temp_date.year);
+//             moveXY(1, i); printf("║"); moveXY(90, i); printf("║"); i++;
+
+//             moveXY(1, i);
+//             printf("╠");
+//             for (int j = 2; j < 90; j++) {
+//                 moveXY(j, i);
+//                 printf("═");
+//             }
+//             moveXY(90, i);
+//             printf("╣");
+//             i++;
+
+//             studentsShown++;
+//             count++;
+//         }
+
+//         if (studentsShown == 0) break;
+
+//         // Proper bottom corner
+//         i--;
+//         moveXY(1, i);
+//         printf("╚");
+//         for (int j = 2; j < 90; j++) {
+//             moveXY(j, i);
+//             printf("═");
+//         }
+//         moveXY(90, i);
+//         printf("╝");
+
+//         // Prompt
+//         box(1, i + 1, 90, i + 3);
+//         moveXY(3, i + 2);
+//         if (feof(fp)) {
+//             printf("End of list. Press Enter to exit...");
+//             getch_echo();
+//             break;
+//         } else {
+//             printf("Press 'n' for next, 'q' to quit...");
+//             choice = getch();
+//             if (choice == 'q' || choice == 'Q') break;
+//         }
+//     }
+
+//     fclose(fp);
+// }
 
 
 
@@ -558,13 +717,12 @@ void remove_student() {
     CLEAR_SCREEN();
     box1();
     mainBox();
-    moveXY(41, 4);
+    moveXY(41, 3);
     printf("Remove Student");
 
     char id[100];
-    moveXY(35, 15);
+    moveXY(10, 15);
     printf("Enter Student ID to remove: ");
-    moveXY(65, 15);
     fgets(id, 100, stdin);
     id[strcspn(id, "\n")] = '\0'; // Remove newline
 
@@ -601,11 +759,11 @@ void remove_student() {
         rename("../data/temp.dat", "../data/student.dat");
         saveToFile(&seatdata); // Save updated room data
 
-        moveXY(35, 17);
+        moveXY(10, 17);
         printf("Student with ID %s removed successfully!", id);
     } else {
         remove("../data/temp.dat");
-        moveXY(35, 17);
+        moveXY(10, 17);
         printf("Student with ID %s not found!", id);
     }
 
@@ -618,12 +776,12 @@ void reset_student_records() {
     CLEAR_SCREEN();
     box1();
     mainBox();
-    moveXY(41, 4);
+    moveXY(35, 3);
     printf("Reset Student Records");
 
-    moveXY(35, 15);
+    moveXY(12, 15);
     printf("Are you sure you want to delete ALL student records? (Y/N)");
-
+    moveXY(45, 16);
     char confirm = getch();
     if (confirm == 'Y' || confirm == 'y') {
         FILE *fp = fopen("../data/student.dat", "wb");
@@ -823,7 +981,7 @@ void payment_menu() {
                     }
                 }
 
-                
+
                 list[index].amount += add;
 
                 fseek(fp, index * sizeof(struct stdn), SEEK_SET);
