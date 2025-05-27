@@ -6,7 +6,7 @@
 #include <../include/room.h>
 
 void graph_menu() {
-    system("cls");
+    CLEAR_SCREEN();
     box1();
     moveXY(41, 2);
     printf("Graph");
