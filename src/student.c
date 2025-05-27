@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
 #include "../include/library.h"
 #include "../include/room.h"
 
@@ -22,10 +23,58 @@ struct stdn {
     Date payment_date;
 };
 
+
+int load_all_students(struct stdn students[], int max_students) {
+    FILE *fp = fopen("../data/student.dat", "rb");
+    if (!fp) return 0;
+    int count = 0;
+    while (fread(&students[count], sizeof(struct stdn), 1, fp) == 1 && count < max_students) {
+        count++;
+    }
+    fclose(fp);
+    return count;
+}
+
+int select_student(struct stdn students[], int count) {
+    CLEAR_SCREEN();
+    box1();
+    moveXY(40, 2);
+    printf("Select Student");
+
+    for (int i = 0, y = 5; i < count && y < 35; i++, y += 3) {
+        moveXY(3, y);
+        printf("%2d. %-30s  [ID: %s]", i + 1, students[i].name, students[i].id);
+    }
+
+    char input[100];
+    moveXY(3, 36);
+    printf("Enter index or ID to select: ");
+    fgets(input, sizeof(input), stdin);
+    input[strcspn(input, "\n")] = '\0';
+
+    // Try index
+    if (isdigit(input[0])) {
+        int index = atoi(input) - 1;
+        if (index >= 0 && index < count)
+            return index;
+    }
+
+    // Try ID
+    for (int i = 0; i < count; i++) {
+        if (strcmp(students[i].id, input) == 0)
+            return i;
+    }
+
+    moveXY(3, 38);
+    printf("Student not found.");
+    getch_echo();
+    return -1;
+}
+
 void student_menu() {
     char ch;
     do {
-        system("cls");
+        CLEAR_SCREEN();
         moveXY(41, 2);
         printf("Student");
 
@@ -77,7 +126,7 @@ void student_menu() {
 
 
 void enroll() {
-    system("cls");
+    CLEAR_SCREEN();
     box1();
     mainBox();
     lowerBox();
@@ -92,33 +141,101 @@ void enroll() {
         return;
     }
 
-    moveXY(35, 15);
-    printf("Name :");
-    moveXY(42, 15);
-    fgets(temp.name, 100, stdin);
-    temp.name[strcspn(temp.name, "\n")] = '\0';
 
-    moveXY(35, 17);
-    printf("ID :");
-    moveXY(42, 17);
-    fgets(temp.id, 100, stdin);
-    temp.id[strcspn(temp.id, "\n")] = '\0';
 
-    if (check_if_already_enrolled(temp.id)) {
-        moveXY(35, 19);
-        printf("ID already exists!");
-        fclose(fp);
-        getch_echo();
-        return;
+    while (1)
+    {
+        moveXY(35, 15);
+        printf("Name :");
+        moveXY(42, 15);
+        fgets(temp.name, 100, stdin);
+        temp.name[strcspn(temp.name, "\n")] = '\0';
+        if (strlen(temp.name) == 0) {
+            moveXY(35, 15);
+            printf("Name cannot be empty!");
+            getch_echo();
+            moveXY(35, 15);
+            printf("                       ");
+
+        }
+        else {
+            break;  // Exit loop if name is valid
+        }
+    }
+    
+    
+
+    while(1){
+        moveXY(35, 17);
+        printf("ID :");
+        moveXY(42, 17);
+        fgets(temp.id, 100, stdin);
+        temp.id[strcspn(temp.id, "\n")] = '\0';
+        if (strlen(temp.id) == 0) {
+            moveXY(35, 17);
+            printf("ID cannot be empty!");
+            getch_echo();
+            moveXY(35, 17);
+            printf("                       "); // Clear previous message
+        } else if(check_if_already_enrolled(temp.id))
+        {
+            moveXY(35, 17);
+            printf("ID already exists!");
+            getch_echo();
+            moveXY(35, 17);
+            printf("                       "); // Clear previous message
+        } else if (strlen(temp.id) < 2 || strlen(temp.id) > 15 || !isdigit(temp.id[0])) {
+            moveXY(20, 17);
+            printf("ID must be 5-15 characters long and start with a digit!");
+            getch_echo();
+            moveXY(20, 17);
+            printf("                                                        "); // Clear previous message
+        }  // Check if ID is valid
+        else if (strspn(temp.id, "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz") != strlen(temp.id)) {
+            moveXY(35, 17);
+            printf("ID can only contain alphanumeric characters!");
+            getch_echo();
+            moveXY(35, 17);
+            printf("                                                        "); // Clear previous message
+        }
+        else if (strchr(temp.id, ' ') != NULL) {
+            moveXY(35, 17);
+            printf("ID cannot contain spaces!");
+            getch_echo();
+            moveXY(35, 17);
+            printf("                                                        "); // Clear previous message
+        }else {
+            break;  // Exit loop if ID is valid
+        }
     }
 
-    moveXY(35, 19);
-    printf("Department :");
-    moveXY(48, 19);
-    fgets(temp.dep, 50, stdin);
-    temp.dep[strcspn(temp.dep, "\n")] = '\0';
 
-    system("cls");
+    // Get department
+    while(1){
+        moveXY(35, 19);
+        printf("Department :");
+        moveXY(48, 19);
+        fgets(temp.dep, 50, stdin);
+        temp.dep[strcspn(temp.dep, "\n")] = '\0';
+        if (strlen(temp.dep) == 0) {
+            moveXY(35, 21);
+            printf("Department cannot be empty!");
+            getch_echo();
+            moveXY(35, 21);
+            printf("                       "); // Clear previous message
+        } else if (strchr(temp.dep, ' ') != NULL) {
+            moveXY(35, 21);
+            printf("Department cannot contain spaces!");
+            getch_echo();
+            moveXY(35, 21);
+            printf("                                    "); // Clear previous message
+        } else {
+            break;  // Exit loop if department is valid
+        }
+    }
+    
+
+    CLEAR_SCREEN();
     box1();
     moveXY(41, 2);
     printf("Enroll");
@@ -133,51 +250,92 @@ void enroll() {
     
     int day, month, year;
     float amount = 0.0;
-    while (1) {
+
+    while(1){
         moveXY(3,12); printf("Floor : ");
         scanf("%d", &f);
+        if (f < 1 || f > FLOORS) {
+            moveXY(3,12); printf("Invalid floor! Try again.");
+            getch_echo();
+            getch_echo();
+           
+        }else {
+            break;
+        }
+        moveXY(3,12); printf("                                "); // Clear previous message
+    }
+
+    // Check if the floor exists
+
+    while(1){
         moveXY(3,14); printf("Room : ");
         scanf("%d", &r);
+        if (r < 1 || r > ROOMS) {
+            moveXY(3,14); printf("Invalid room! Try again.");
+            getch_echo();
+            getch_echo();
+            
+        }else {
+            break;
+        }
+        moveXY(3,14); printf("                                "); // Clear previous message
+    }
+
+    // Check if the room exists
+
+    while (1){
         moveXY(3,16); printf("Seat : ");
         scanf("%d", &s);
-
-        // Validate seat selection
-
-        if (f < 1 || f > FLOORS || r < 1 || r > ROOMS || s < 1 || s > SEATS) {
-            moveXY(3, 18);
-            printf("Invalid floor/room/seat number! Try again.");
-            continue;
+        if (s < 1 || s > SEATS) {
+            moveXY(3,16); printf("Invalid seat! Try again.");
+        } else if(seatdata.floors[f-1].rooms[r-1].seats[s-1].availability == 0) {
+            moveXY(3,16); printf("Seat is already occupied! Choose another.");
+            getch_echo();
+            getch_echo();
+            
+        }else {
+            break;  // Exit loop if seat is valid
         }
-
-        // Check if the seat is available
-        if (seatdata.floors[f-1].rooms[r-1].seats[s-1].availability == 0) {
-            moveXY(3, 18);
-            printf("Seat is already occupied! Choose another.");
-            continue;
-        }
+        moveXY(3,16); printf("                                         "); // Clear previous message
+    }
         
+    while (1)
+    {
         moveXY(3,18); printf("Day : ");
         scanf("%d", &day);
-        moveXY(3,20); printf("Month : ");
+        moveXY(13,18); printf("Month : ");
         scanf("%d", &month);
-        moveXY(3,22); printf("Year : ");
+        moveXY(23,18); printf("Year : ");
         scanf("%d", &year);
         if (day < 1 || day > 31 || month < 1 || month > 12 || year > 2025) {
-            moveXY(3, 24);
-            printf("Invalid date! Try again.");
-            continue;
+        moveXY(3, 18);
+        printf("Invalid date! Try again.");
+        getch_echo();
+        getch_echo();
+        moveXY(3, 18);
+        printf("                                "); // Clear previous message
+        }else{
+            break;  // Exit loop if date is valid
         }
-        moveXY(3,24); printf("Payment amount : ");
-        scanf("%f", &amount);
-        if (amount <= 0) {
-            moveXY(3, 26);
-            printf("Invalid amount! Try again.");
-            continue;
-        }
-        break;  // Exit loop if valid seat is chosen
+
     }
-    
-    // Save student details
+        // Get payment amount
+        while(1){
+            moveXY(3,24); printf("Payment amount : ");
+            scanf("%f", &amount);
+            if (amount <= 0) {
+            moveXY(3, 24);
+            printf("Invalid amount! Try again.");
+            getch_echo();
+            getch_echo();
+            moveXY(3, 24);
+            printf("                                "); // Clear previous message
+            }else {
+                break;  // Exit loop if amount is valid
+            }
+        
+        }
+
 
 
     // Mark seat as occupied and save student ID
@@ -199,15 +357,16 @@ void enroll() {
     moveXY(3, 20);
     printf("Student enrolled successfully!");
     getch_echo();
+    getch_echo();
 }
 
 
 
 
-#define STUDENTS_PER_PAGE 7
+#define STUDENTS_PER_PAGE 8
 
 void show() {
-    system("cls");
+    CLEAR_SCREEN();
     box1();
     moveXY(41, 2);
     printf("Students");
@@ -225,7 +384,7 @@ void show() {
 
     while (1) {
         int studentsShown = 0;
-        system("cls");
+        CLEAR_SCREEN();
         box1();
         moveXY(41, 2);
         printf("Students");
@@ -327,7 +486,7 @@ int check_if_already_enrolled(char id[]) {
     return 0; // ID not found
 }
 void remove_student() {
-    system("cls");
+    CLEAR_SCREEN();
     box1();
     mainBox();
     moveXY(41, 4);
@@ -387,7 +546,7 @@ void remove_student() {
 }
 
 void reset_student_records() {
-    system("cls");
+    CLEAR_SCREEN();
     box1();
     mainBox();
     moveXY(41, 4);
@@ -421,4 +580,180 @@ void reset_student_records() {
     moveXY(3, 37);
     printf("Press Enter to continue...");
     getch_echo();
+}
+
+
+
+
+
+int calculateDueDays(struct stdn s) {
+    int days_paid = (int)(s.amount / 100);
+    Date last_valid = addDaysToDate(s.payment_date, days_paid);
+    time_t due_time = convertToTimeT(last_valid);
+    time_t now = time(NULL);
+
+    double diff = difftime(now, due_time);
+    if (diff <= 0) return 0;
+
+    return (int)(diff / (24 * 60 * 60));
+    }
+
+float calculateDueAmount(int due_days) {
+    return due_days * 100.0f;
+}
+
+
+
+void payment_menu() {
+    FILE *fp = fopen("../data/student.dat", "rb+");
+    if (fp == NULL) {
+        printf("Could not open file.\n");
+        getch_echo();
+        return;
+    }
+
+    struct stdn list[1000];
+    int total = 0;
+
+    // Load all students
+    while (fread(&list[total], sizeof(struct stdn), 1, fp)) {
+        total++;
+    }
+
+    int page = 0;
+    char input[100];
+
+    while (1) {
+        CLEAR_SCREEN();
+        box1();
+        box(1, 5, 90, 23);
+        box(1,24,90,38);
+        moveXY(39, 2);
+        printf("Payment System");
+
+        int start = page * STUDENTS_PER_PAGE;
+        int end = start + STUDENTS_PER_PAGE;
+        if (end > total) end = total;
+        moveXY(3, 6);
+        printf("%-3s %-20s %-20s %-8s %-10s\n", "No", "ID", "Name", "Balance", "Owes");
+        middleLine();
+        moveXY(1, 8);
+        int k = 8;
+        for (int i = start; i < end; ++i) {
+            int due_days = calculateDueDays(list[i]);
+            float due_amount = calculateDueAmount(due_days);
+            if (due_days > 0) {
+                printf("\033[31m"); // Red color for overdue
+            } else {
+                printf("\033[32m"); // Green color for on-time
+            }
+            moveXY(3,k++);
+            printf("%-3d %-15s %-25s %-8.2f ৳  %-8.2f ৳ [f=%d r=%d s=%d]\n",
+                   i, list[i].id, list[i].name, list[i].amount, due_amount,
+                   list[i].floor, list[i].room, list[i].seat);
+            resetTextColor();
+            middleLine_small();
+            k++;
+        }
+        moveXY(1, k-1);
+        lowerLine();
+        moveXY(3, 25);
+        printf("[n] Next  [b] Back  [id] Search by ID  [index] Search by index  [back] Exit\n");
+        moveXY(3, 26);
+        printf("Enter command: ");
+        scanf("%s", input);
+
+        if (strcmp(input, "n") == 0) {
+            if ((page + 1) * STUDENTS_PER_PAGE < total) page++;
+        } else if (strcmp(input, "b") == 0) {
+            if (page > 0) page--;
+        } else if (strcmp(input, "id") == 0) {
+            moveXY(3, 28);
+            printf("Enter student ID: ");
+            scanf("%s", input);
+            int found = -1;
+            for (int i = 0; i < total; ++i) {
+                if (strcmp(list[i].id, input) == 0) {
+                    found = i;
+                    break;
+                }
+            }
+            if (found != -1) {
+                int due_days = calculateDueDays(list[found]);
+                float due_amount = calculateDueAmount(due_days);
+                moveXY(3, 30);
+                printf("Found: %s (%s) ",
+                       list[found].name, list[found].id);
+                moveXY(3, 32);
+                printf("Current balance: %.2f ৳\n",list[found].amount);
+                moveXY(3, 34);
+                printf("Due: %.2f ৳ (%d days)",due_amount, due_days);
+
+
+                float add;
+                moveXY(3, 36);
+                printf("Enter amount to add: ");
+                scanf("%f", &add);
+                list[found].amount += add;
+
+                fseek(fp, found * sizeof(struct stdn), SEEK_SET);
+                fwrite(&list[found], sizeof(struct stdn), 1, fp);
+                fflush(fp);
+                moveXY(50, 36);
+                printf("Payment updated.");
+                getch_echo();
+                getch_echo();
+            } else {
+                moveXY(3, 30);
+                printf("Student not found.");
+                getch_echo();
+                getch_echo();
+            }
+        } else if (strcmp(input, "index") == 0) {
+            int index;
+            moveXY(3, 28);
+            printf("Enter index: ");
+            scanf("%d", &index);
+            if (index >= 0 && index < total) {
+                int due_days = calculateDueDays(list[index]);
+                float due_amount = calculateDueAmount(due_days);
+                
+                moveXY(3, 30);
+                printf("Found: %s (%s) ",list[index].name, list[index].id);
+                moveXY(3, 32);
+                printf("Current balance: %.2f ৳\n",list[index].amount);
+                moveXY(3, 34);
+                printf("Due: %.2f ৳ (%d days)",due_amount, due_days);
+
+
+                float add;
+                moveXY(3, 36);
+                printf("Enter amount to add: ");
+                scanf("%f", &add);
+                list[index].amount += add;
+
+                fseek(fp, index * sizeof(struct stdn), SEEK_SET);
+                fwrite(&list[index], sizeof(struct stdn), 1, fp);
+                fflush(fp);
+                moveXY(50, 36);
+                printf("Payment updated.");
+                getch_echo();
+                getch_echo();
+            } else {
+                moveXY(3, 30);
+                printf("Invalid index.");
+                getch_echo();
+                getch_echo();
+            }
+        } else if (strcmp(input, "back") == 0) {
+            break;
+        } else {
+            moveXY(3, 28);
+            printf("Invalid input. Try again.");
+            getch_echo();
+            getch_echo();
+        }
+    }
+
+    fclose(fp);
 }

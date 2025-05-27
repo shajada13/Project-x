@@ -15,33 +15,25 @@
 void main_menu() {
     char ch;
     do{
-        system("cls");
+        CLEAR_SCREEN();
         box1();
         mainBox();
         lowerBox();
         moveXY(6, 2);  printf("1");
-        moveXY(3, 3); printf("Student");
+        moveXY(3, 3); printf("Students");
 
         moveXY(16, 2); printf("2");
-        moveXY(14, 3); printf("Room");
+        moveXY(14, 3); printf("Enroll");
 
         moveXY(24, 2); printf("3");
-        moveXY(22, 3); printf("Graph");
+        moveXY(22, 3); printf("rooms");
 
-        moveXY(35, 2); printf("5");
+        moveXY(35, 2); printf("4");
         moveXY(31, 3); printf("Payments");
 
-        moveXY(48, 2); printf("6");
-        moveXY(43, 3); printf("Maintenance");
+        moveXY(48, 2); printf("5");
+        moveXY(43, 3); printf("Graphs");
 
-        moveXY(62, 2); printf("7");
-        moveXY(58, 3); printf("Visitors");
-
-        moveXY(73, 2); printf("8");
-        moveXY(70, 3); printf("Reports");
-
-        moveXY(84, 2); printf("9");
-        moveXY(81, 3); printf("Setting");
 
         moveXY(40, 16); printf("Welcome to...");
         moveXY(30, 17); printf("STUDENT DORM ADMINISTRATION SYSTEM");
@@ -53,15 +45,19 @@ void main_menu() {
         ch =(getch());
            
         switch (ch) {
-            case 'S':
             case '1':
                 student_menu();
                 break;
-            case 'R':
             case '2':
-                room_menu();
+                enroll();
                 break;
             case '3':
+                room_menu();
+                break;
+            case '4':
+                payment_menu();
+                break;
+            case '5':
                 graph_menu();
                 break;
             default: 
@@ -70,6 +66,6 @@ void main_menu() {
                 getch_echo();
         }
     }while (ch!='Q');
-    system("cls");
+    CLEAR_SCREEN();
     return;
 }

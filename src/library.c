@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include<ctype.h>
 #include <time.h>
-int i;
+#include <string.h>
 
 char getch_echo()
 {
@@ -11,6 +11,18 @@ char getch_echo()
     //putchar(c);  // Echo the character
     return c;
 }
+
+
+int get_input(const char *prompt, char *output) {
+    printf("%s", prompt);
+    fgets(output, 100, stdin);
+    output[strcspn(output, "\n")] = '\0';  // Remove newline
+
+    if (strcmp(output, "back") == 0) return -1;
+    if (strcmp(output, "quit") == 0) return -2;
+    return 0;
+}
+
 
 char getch() {
     char buffer[10];  // Extra space to catch extra input
@@ -55,12 +67,16 @@ void mainBox()
     box(1,5,90,35);
     
 }
+
+
 void lowerBox(){
     box(1,36,90,38);
 }
+
+
 void line()
 {
-    for (i = 1; i < 89; i++)
+    for (int i = 1; i < 89; i++)
     {
         printf("═"); //  Horizontal Line
     }
@@ -74,6 +90,24 @@ void upperLine()
         printf("═"); //  Horizontal Line
     }
     printf("╗"); // Top Right Corner
+}
+void middleLine()
+{
+    printf("╠"); // Middle Left Corner
+    for (int i = 1; i < 89; i++)
+    {
+        printf("═"); // Middle Horizontal Line
+    }
+    printf("╣"); // Middle Right Corner
+}
+void middleLine_small()
+{
+    printf("╟"); // Middle Left Corner
+    for (int i = 1; i < 89; i++)
+    {
+        printf("─"); // Middle Horizontal Line
+    }
+    printf("╢"); // Middle Right Corner
 }
 
 void lowerLine()
@@ -122,6 +156,9 @@ void reset_student_data() {
         printf("No data file found to delete.\n");
     }
 }
+
+
+
 Date addDaysToDate(Date start, int days_to_add) {
     struct tm t = {0};
     t.tm_mday = start.day;
@@ -174,3 +211,4 @@ int checkIfDatePassed(Date target) {
     else
         return 0;  // Within the same day (±1 day tolerance)
 }
+
