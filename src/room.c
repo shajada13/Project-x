@@ -121,7 +121,7 @@ void room_grid() {
 }
 
 void room_menu(){
-    system("cls");
+    CLEAR_SCREEN();
     box1();
     moveXY(41, 2);
     printf("Rooms");

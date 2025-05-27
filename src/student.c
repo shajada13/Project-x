@@ -162,8 +162,8 @@ void enroll() {
             break;  // Exit loop if name is valid
         }
     }
-    
-    
+
+
 
     while(1){
         moveXY(35, 17);
@@ -233,7 +233,7 @@ void enroll() {
             break;  // Exit loop if department is valid
         }
     }
-    
+
 
     CLEAR_SCREEN();
     box1();
@@ -247,7 +247,7 @@ void enroll() {
     SeatData seatdata;
     loadFromFile(&seatdata);
     int f, r, s;
-    
+
     int day, month, year;
     float amount = 0.0;
 
@@ -258,7 +258,7 @@ void enroll() {
             moveXY(3,12); printf("Invalid floor! Try again.");
             getch_echo();
             getch_echo();
-           
+
         }else {
             break;
         }
@@ -274,7 +274,7 @@ void enroll() {
             moveXY(3,14); printf("Invalid room! Try again.");
             getch_echo();
             getch_echo();
-            
+
         }else {
             break;
         }
@@ -289,36 +289,105 @@ void enroll() {
         if (s < 1 || s > SEATS) {
             moveXY(3,16); printf("Invalid seat! Try again.");
         } else if(seatdata.floors[f-1].rooms[r-1].seats[s-1].availability == 0) {
-            moveXY(3,16); printf("Seat is already occupied! Choose another.");
+            moveXY(3,16); printf("Seat is already occupied!");
             getch_echo();
             getch_echo();
-            
+
         }else {
             break;  // Exit loop if seat is valid
         }
         moveXY(3,16); printf("                                         "); // Clear previous message
     }
-        
+
+    // while (1)
+    // {
+    //     moveXY(3,18); printf("Day : ");
+    //     scanf("%d", &day);
+    //     moveXY(13,18); printf("Month : ");
+    //     scanf("%d", &month);
+    //     moveXY(23,18); printf("Year : ");
+    //     scanf("%d", &year);
+    //     if (day < 1 || day > 31 || month < 1 || month > 12 || year > 2025 || year < 2020) {
+    //     moveXY(3, 18);
+    //     printf("Invalid date! Try again.");
+    //     getch_echo();
+    //     getch_echo();
+    //     moveXY(3, 18);
+    //     printf("                                "); // Clear previous message
+    //     }else{
+    //         break;  // Exit loop if date is valid
+    //     }
+
+    // }
+
+
+
     while (1)
     {
-        moveXY(3,18); printf("Day : ");
-        scanf("%d", &day);
-        moveXY(13,18); printf("Month : ");
-        scanf("%d", &month);
-        moveXY(23,18); printf("Year : ");
-        scanf("%d", &year);
-        if (day < 1 || day > 31 || month < 1 || month > 12 || year > 2025) {
-        moveXY(3, 18);
-        printf("Invalid date! Try again.");
-        getch_echo();
-        getch_echo();
-        moveXY(3, 18);
-        printf("                                "); // Clear previous message
-        }else{
-            break;  // Exit loop if date is valid
-        }
+    char choice[10];
 
+    moveXY(3, 18);
+    printf("Use today's date? (y/n)");
+    scanf("%s", choice);
+
+    if (strcmp(choice, "y") == 0 || strcmp(choice, "Y") == 0)
+    {
+        time_t now = time(NULL);
+        struct tm *local = localtime(&now);
+        day = local->tm_mday;
+        month = local->tm_mon + 1;
+        year = local->tm_year + 1900;
+        break;
     }
+    else if (strcmp(choice, "n") == 0 || strcmp(choice, "N") == 0)
+    {
+        while (1)
+        {
+            moveXY(3,18); printf("                                   ");
+            moveXY(3,18); printf("Day :");
+            scanf("%d", &day);
+            moveXY(11,18); printf("Month :");
+            scanf("%d", &month);
+            moveXY(21,18); printf("Year :");
+            scanf("%d", &year);
+
+            if (day < 1 || day > 31 || month < 1 || month > 12 || year > 2025 || year < 2020) {
+                moveXY(3, 19);
+                printf("Invalid date! Try again...");
+                getch_echo();
+                getch_echo();
+                moveXY(3, 18); printf("                         ");
+                moveXY(13,18); printf("           ");
+                moveXY(23,18); printf("           ");
+                moveXY(3, 19); printf("                          ");
+            } else {
+                break;  // exit inner while if date is valid
+            }
+        }
+        break; // exit outer while after valid custom date
+    }
+    else if (strcmp(choice, "qs") == 0)
+    {
+        return; // or break/continue based on your logic
+    }
+    else
+    {
+        moveXY(3, 19);
+        printf("Invalid input. Use 'y', 'n', or 'qs'.");
+        getch_echo();
+        moveXY(3, 18); printf("                                     ");
+        moveXY(3, 19); printf("                                     ");
+    }
+}
+
+
+
+
+
+
+
+
+
         // Get payment amount
         while(1){
             moveXY(3,24); printf("Payment amount : ");
@@ -333,7 +402,7 @@ void enroll() {
             }else {
                 break;  // Exit loop if amount is valid
             }
-        
+
         }
 
 
@@ -353,8 +422,8 @@ void enroll() {
 
     fwrite(&temp, sizeof(temp), 1, fp);
     fclose(fp);
-    
-    moveXY(3, 20);
+
+    moveXY(3, 26);
     printf("Student enrolled successfully!");
     getch_echo();
     getch_echo();
@@ -400,7 +469,7 @@ void show() {
             printf("ID : %-20s ", temp.id);
             moveXY(3, i+2);
             printf("Dep: %-10s ", temp.dep);
-            moveXY(90, i); printf("║"); 
+            moveXY(90, i); printf("║");
 
             moveXY(80, i);
             printf("Floor: %-2d", temp.floor);
@@ -554,13 +623,13 @@ void reset_student_records() {
 
     moveXY(35, 15);
     printf("Are you sure you want to delete ALL student records? (Y/N)");
-    
+
     char confirm = getch();
     if (confirm == 'Y' || confirm == 'y') {
         FILE *fp = fopen("../data/student.dat", "wb");
         if (fp != NULL) {
             fclose(fp);
-            
+
             // Reset room data
             SeatData seatdata;
             initialize_seat(&seatdata);
@@ -642,11 +711,11 @@ void payment_menu() {
         for (int i = start; i < end; ++i) {
             int due_days = calculateDueDays(list[i]);
             float due_amount = calculateDueAmount(due_days);
-            
+
             moveXY(3,k++);
             printf("%-3d │ %-16s │ %-28s │ %-10.2f ৳    │   %-8.2f ৳\n",
                    i, list[i].id, list[i].name, list[i].amount, due_amount);
-            
+
             middleLine_small();
             k++;
         }
@@ -686,9 +755,23 @@ void payment_menu() {
 
 
                 float add;
-                moveXY(3, 36);
-                printf("Enter amount to add: ");
-                scanf("%f", &add);
+
+                while(1){
+                    moveXY(3, 36);
+                    printf("Enter amount to add: ");
+                    scanf("%f", &add);
+                    if(add < 0){
+                        moveXY(3, 36);
+                        printf("Invalid amount. Please enter a positive number.");
+                        getch_echo();
+                        getch_echo();
+                        moveXY(3, 36);
+                        printf("                                                ");
+                    }
+                    else{
+                        break;
+                    }
+                }
                 list[found].amount += add;
 
                 fseek(fp, found * sizeof(struct stdn), SEEK_SET);
@@ -712,7 +795,7 @@ void payment_menu() {
             if (index >= 0 && index < total) {
                 int due_days = calculateDueDays(list[index]);
                 float due_amount = calculateDueAmount(due_days);
-                
+
                 moveXY(3, 30);
                 printf("Found: %s (%s) ",list[index].name, list[index].id);
                 moveXY(3, 32);
@@ -722,9 +805,25 @@ void payment_menu() {
 
 
                 float add;
-                moveXY(3, 36);
-                printf("Enter amount to add: ");
-                scanf("%f", &add);
+                while (1)
+                {
+                    moveXY(3, 36);
+                    printf("Enter amount to add: ");
+                    scanf("%f", &add);
+                    if(add < 0){
+                        moveXY(3, 36);
+                        printf("Invalid amount. Please enter a positive number.");
+                        getch_echo();
+                        getch_echo();
+                        moveXY(3, 36);
+                        printf("                                                ");
+                    }
+                    else{
+                        break;
+                    }
+                }
+
+                
                 list[index].amount += add;
 
                 fseek(fp, index * sizeof(struct stdn), SEEK_SET);
